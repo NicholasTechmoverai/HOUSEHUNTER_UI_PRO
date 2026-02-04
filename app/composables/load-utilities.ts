@@ -1,0 +1,80 @@
+
+// ---------------- Load Genders ----------------
+export const load_genders = async () => {
+
+const { get } = useApi()
+const endpoint = useEndpoints()
+
+  try {
+    const res = await get(endpoint.utilities.genders)
+    if (res.success) {
+      return res
+    } else {
+      console.warn("Failed to load genders", res)
+      return res
+    }
+  } catch (err) {
+    console.error("Error loading genders:", err)
+    return { success: false, message: err.message, data: [] }
+  }
+}
+
+// ---------------- Load Countries ----------------
+export const load_country_codes = async () => {
+
+const { get } = useApi()
+const endpoint = useEndpoints()
+
+  try {
+    const res = await get(endpoint.utilities.countries)
+    if (res.success) {
+      return res
+    } else {
+      console.warn("Failed to load countries", res)
+      return res
+    }
+  } catch (err) {
+    console.error("Error loading countries:", err)
+    return { success: false, message: err.message, data: [] }
+  }
+}
+
+// ---------------- Load Currencies ----------------
+export const load_currencies = async () => {
+
+const { get } = useApi()
+const endpoint = useEndpoints()
+
+  try {
+    const res = await get(endpoint.utilities.currencies)
+    if (res.success) {
+      return res
+    } else {
+      console.warn("Failed to load currencies", res)
+      return res
+    }
+  } catch (err) {
+    console.error("Error loading currencies:", err)
+    return { success: false, message: err.message, data: [] }
+  }
+}
+
+export const load_our_reviews = async () => {
+
+const { get } = useApi()
+const endpoint = useEndpoints()
+
+  try {
+    const res = await get(endpoint.utilities.our_reviews)
+    if (res.success) {
+      return res
+    } else {
+      console.warn("Failed to load countries", res)
+      return res
+    }
+  } catch (err) {
+    console.error("Error loading countries:", err)
+    return { success: false, message: err.message, data: [] }
+  }
+
+}

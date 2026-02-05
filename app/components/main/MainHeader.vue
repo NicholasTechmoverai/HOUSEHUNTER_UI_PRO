@@ -12,12 +12,11 @@ const navigationItems = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Home',
     to: '/',
-    badge: 'New',
     active: route.path === '/'
   },
   {
-    label: 'Search',
-    to: '/search',
+    label: 'Listings',
+    to: '/listings',
     active: route.path.startsWith('/apartments')
   },
   {
@@ -33,8 +32,8 @@ const navigationItems = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith('/create')
   },
   {
-    label: 'Profile',
-    to: '/about',
+    label: 'Dashboard',
+    to: '/dashboard',
     icon: 'i-lucide-info',
     active: route.path.startsWith('/about')
   }
@@ -45,13 +44,12 @@ const mobileTabItems = ref([
     icon: 'i-lucide-home',
     label: 'Home',
     to: '/',
-    badge: 'New',
     active: route.path === '/'
   },
   {
     icon: 'i-lucide-search',
     label: 'Search',
-    to: '/search',
+    to: '/listings',
     active: route.path.startsWith('/apartments')
   },
   {

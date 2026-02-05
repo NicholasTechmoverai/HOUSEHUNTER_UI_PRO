@@ -142,7 +142,9 @@ export default defineNuxtConfig({
       { path: '~/components/admin', pathPrefix: false },
       { path: '~/components/inbox', pathPrefix: false },
       { path: '~/components/home', pathPrefix: false },
-      { path: '~/components/settings', pathPrefix: false }
+      { path: '~/components/settings', pathPrefix: false },
+            { path: '~/components/listing', pathPrefix: false }
+
     ]
   },
 

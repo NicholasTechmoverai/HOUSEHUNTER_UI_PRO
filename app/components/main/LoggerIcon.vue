@@ -5,7 +5,7 @@
 
       <template #content>
         <div class="flex flex-col gap-2 p-2 min-w-[200px]">
-          <UButton icon="i-lucide-user" variant="outline" @click="$router.push('/account')"
+          <UButton icon="i-lucide-user" variant="outline" to="/dashboard/?tab=profile"
             :label="authStore.user?.display_name" />
           <UButton icon="i-lucide-log-out" color="error" variant="outline" @click="logout" label="Logout" />
         </div>

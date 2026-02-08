@@ -307,7 +307,7 @@ watch(country, (newCountry) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-brand-start/5 via-brand-middle/5 to-brand-end/5 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-2 sm:p-4 flex items-center justify-center">
+  <div class="min-h-screen bg-gradient-to-br from-brand-start/5 via-brand-middle/5 to-brand-end/5 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-2 sm:p-4 flex items-start justify-center">
     <!-- Animated background elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
       <div class="absolute -top-40 -right-40 w-60 sm:w-80 h-60 sm:h-80 bg-brand-start/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>

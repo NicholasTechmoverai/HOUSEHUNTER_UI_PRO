@@ -410,6 +410,7 @@ export const useAuthStore = defineStore('auth', {
         logout() {
             this.clearUser()
             this.stopAutoRefresh()
+            return true
         },
 
         initCrossTabListener() {

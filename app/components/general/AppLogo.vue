@@ -1,12 +1,12 @@
 <template>
-  <div class="flex items-center justify-center">
+  <NuxtLink to="/" class="flex items-center justify-center cursor-pointer select-none pointer-events-none">
     <img 
       :src="computedLogo"
       :style="{ width: computedSize + 'px' }"
       class="rounded-lg select-none"
       alt="Logo"
     >
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">

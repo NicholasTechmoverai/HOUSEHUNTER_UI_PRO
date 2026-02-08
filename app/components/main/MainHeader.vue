@@ -27,14 +27,13 @@ const navigationItems = computed<NavigationMenuItem[]>(() => [
   },
   {
     label: 'Map',
-    to: '/create',
+    to: '/map',
     variant: 'primary' as const,
     active: route.path.startsWith('/create')
   },
   {
     label: 'Dashboard',
     to: '/dashboard',
-    icon: 'i-lucide-info',
     active: route.path.startsWith('/about')
   }
 ])
@@ -62,13 +61,13 @@ const mobileTabItems = ref([
   {
     icon: 'i-lucide-map',
     label: 'Map',
-    to: '/create',
+    to: '/map',
     active: route.path.startsWith('/create')
   },
   {
-    icon: 'i-lucide-user',
-    label: 'Profile',
-    to: '/about',
+    icon: 'i-lucide-layout-dashboard',
+    label: 'Dashboard',
+    to: '/dashboard',
     active: route.path.startsWith('/about')
   }
 ])
@@ -95,6 +94,7 @@ watch(route, () => {
 
     <template #right>
       <UColorModeButton />
+      <UButton icon="i-lucide-plus" label="Create" to="/create" variant="soft"/>
       <UTooltip text="More on profile" :kbds="['meta', 'P']">
         <LoggerIcon />
       </UTooltip>

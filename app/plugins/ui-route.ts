@@ -23,7 +23,11 @@ export default defineNuxtPlugin((nuxtApp) => {
       state.setNavbar(false)
       state.setFooter(false)
       state.setLayout('admin')
-    } else {
+    } else if (path.startsWith('/auth')) {
+      state.setLayout('noheader')
+      state.setFooter(false)
+    }
+    else {
       state.setNavbar(true)
       state.setFooter(true)
       state.setLayout('default')

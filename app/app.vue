@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useStateStore } from './store/state'
+import { useStateStore } from './stores/state'
 
 const colorMode = useColorMode()
 const stateStore = useStateStore()
@@ -20,14 +20,15 @@ useHead({
   }
 })
 
-const title = 'Nuxt Dashboard Template'
-const description = 'A professional dashboard template built with Nuxt UI, featuring multiple pages, data visualization, and comprehensive management capabilities for creating powerful admin interfaces.'
+const config = useAppConfig()
+
+
 
 useSeoMeta({
-  title,
-  description,
-  ogTitle: title,
-  ogDescription: description,
+  title :config.site.name,
+  description:config.site.description,
+  ogTitle: config.site.name,
+  ogDescription: config.site.description,
   ogImage: 'https://ui.nuxt.com/assets/templates/nuxt/dashboard-light.png',
   twitterImage: 'https://ui.nuxt.com/assets/templates/nuxt/dashboard-light.png',
   twitterCard: 'summary_large_image'

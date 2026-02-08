@@ -1,155 +1,86 @@
 import { useAppConfig } from '#imports'
-import { useUSerStore } from '~/store/user'
-import type { ApiOptions, ApiResponse, ApiError } from '~/types/api'
+import { useAuthStore } from '~/stores/auth'
+import type { ApiOptions, ApiError } from '~/types/api'
 
 export const useApi = () => {
   const { site } = useAppConfig()
-  const apiBase = `${site.apiBase}/api/v1` || 'http://localhost:8000/api/v1'
-  
-  const nuxtApp = useNuxtApp()
+  const apiBase = site.apiBase
+    ? `${site.apiBase}/api/v1`
+    : 'http://localhost:8000/api/v1'
+
   const toast = useToast()
+  const authStore = useAuthStore()
   const loading = ref(false)
-  const userStore = useUSerStore()
 
-const createAuthHeaders = (headers: Record<string, string> = {}): Record<string, string> => {
-    const token = userStore.token
-    
-    if (!token) {
-        throw new Error('No authentication token available')
-    }
-    
-    const authHeaders: Record<string, string> = {
-        'Authorization': `Bearer ${token}`
-    }
-    
-    const hasContentType = headers['Content-Type'] || headers['content-type']
-    
-    if (hasContentType) {
-        const contentTypeKey = headers['Content-Type'] ? 'Content-Type' : 'content-type'
-        authHeaders[contentTypeKey] = headers[contentTypeKey]
-    } else {
-        authHeaders['Content-Type'] = 'application/json'
-    }
-    
-    return authHeaders
-}
-
-  const prepareHeaders = (options: ApiOptions, authenticate: boolean = false): Record<string, string> => {
+  const buildHeaders = (
+    options: ApiOptions,
+    authenticate: boolean
+  ): Record<string, string> => {
     const headers: Record<string, string> = { ...options.headers }
-    
-    if (authenticate) {
-      try {
-        const authHeaders = createAuthHeaders(headers)
-        Object.assign(headers, authHeaders)
-      } catch (error) {
-        console.warn('Authentication warning:', error.message)
-      }
-    } else {
-      const token = useCookie('auth_token')
-      if (token.value && !headers['Authorization']) {
-        headers['Authorization'] = `Bearer ${token.value}`
-      }
+
+    if (authenticate && authStore.token) {
+      headers.Authorization = `Bearer ${authStore.token}`
     }
-    
+
     const isFormData = options.body instanceof FormData
-    const hasContentType = headers['Content-Type'] || headers['content-type']
-    
-    if (isFormData) {
-      delete headers['Content-Type']
-      delete headers['content-type']
-    } else if (!hasContentType) {
+    if (!isFormData && !headers['Content-Type']) {
       headers['Content-Type'] = 'application/json'
     }
-    
+
+    if (isFormData) {
+      delete headers['Content-Type']
+    }
+
     return headers
   }
 
-  const handleResponse = async <T>(
-    response: Response,
-    options: ApiOptions
-  ): Promise<ApiResponse<T>> => {
-    const headers: Record<string, string> = {}
-    response.headers.forEach((value, key) => {
-      headers[key] = value
+  const handleError = (error: any, endpoint: string): never => {
+    const apiError: ApiError = new Error(error?.message || 'Request failed')
+    apiError.status = error?.status || 500
+    apiError.response = error?.data
+
+    const message =
+      error?.data?.message ||
+      error?.data?.detail ||
+      apiError.message
+
+    toast.add({
+      title: 'Error',
+      description: message,
+      icon: 'i-heroicons-exclamation-triangle',
+      color: 'error'
     })
 
-    let data: T
-    const contentType = response.headers.get('content-type')
-    
-    if (options.responseType === 'blob') {
-      data = await response.blob() as T
-    } else if (options.responseType === 'text') {
-      data = await response.text() as T
-    } else if (options.responseType === 'arrayBuffer') {
-      data = await response.arrayBuffer() as T
-    } else if (contentType?.includes('application/json')) {
-      data = await response.json()
-    } else {
-      data = await response.text() as T
-    }
-
-    return {
-      data,
-      status: response.status,
-      statusText: response.statusText,
-      headers
-    }
-  }
-
-  const handleError = (error: any, endpoint: string): never => {
-    const apiError: ApiError = new Error(error.message || 'Network error')
-    apiError.status = error.status || 500
-    apiError.code = error.code
-    apiError.response = error.data
-    
-    if (error.status >= 400) {
-      const message = error.data?.message || 
-                     error.data?.detail || 
-                     `Request failed: ${error.status}`
-      
-      toast.add({
-        title: 'Error',
-        description: message,
-        icon: 'i-heroicons-exclamation-triangle',
-        color: 'red'
-      })
-    }
-    
-    console.error(`API Error [${endpoint}]:`, error)
-    
+    console.error(`API Error [${endpoint}]`, error)
     throw apiError
   }
 
-  const request = async <T = any>(
+  const request = async <T>(
     method: string,
     endpoint: string,
     body?: any,
-    authenticate: boolean = false,
+    authenticate = false,
     options: ApiOptions = {}
   ): Promise<T> => {
-    const headers = prepareHeaders({ ...options, body }, authenticate)
     const url = new URL(`${apiBase}${endpoint}`)
-    
+
     if (options.params) {
-      Object.entries(options.params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          url.searchParams.append(key, String(value))
+      Object.entries(options.params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) {
+          url.searchParams.append(k, String(v))
         }
       })
     }
-    
+
     loading.value = true
-    
+
     try {
-      const response = await $fetch(url.toString(), {
+      return await $fetch<T>(url.toString(), {
         method,
         body,
-        headers,
+        headers: buildHeaders({ ...options, body }, authenticate),
         timeout: options.timeout
       })
-      
-      return response as T
-      
     } catch (error: any) {
       handleError(error, endpoint)
     } finally {
@@ -157,140 +88,67 @@ const createAuthHeaders = (headers: Record<string, string> = {}): Record<string,
     }
   }
 
-  const withRetry = async <T>(
-    fn: () => Promise<T>,
-    options?: ApiOptions['retry']
-  ): Promise<T> => {
-    const retryConfig = options || { attempts: 3, delay: 1000 }
-    
-    for (let attempt = 1; attempt <= retryConfig.attempts; attempt++) {
-      try {
-        return await fn()
-      } catch (error: any) {
-        if (attempt === retryConfig.attempts) throw error
-        
-        if (retryConfig.onRetry) {
-          retryConfig.onRetry(error, attempt)
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, retryConfig.delay * attempt))
-      }
-    }
-    
-    throw new Error('Max retries exceeded')
-  }
-
-  const get = async <T = any>(
+  const get = <T>(
     endpoint: string,
     params?: Record<string, any>,
-    authenticate: boolean = false,
+    authenticate = false,
     options: ApiOptions = {}
-  ): Promise<T> => {
-    return await request<T>('GET', endpoint, undefined, authenticate, {
+  ) =>
+    request<T>('GET', endpoint, undefined, authenticate, {
       ...options,
-      params: { ...options.params, ...params }
+      params
     })
-  }
 
-  const post = async <T = any>(
+  const post = <T>(
     endpoint: string,
     body?: any,
-    authenticate: boolean = false,
+    authenticate = false,
     options: ApiOptions = {}
-  ): Promise<T> => {
-    return await request<T>('POST', endpoint, body, authenticate, options)
-  }
+  ) => request<T>('POST', endpoint, body, authenticate, options)
 
-  const put = async <T = any>(
+  const put = <T>(
     endpoint: string,
     body?: any,
-    authenticate: boolean = false,
+    authenticate = false,
     options: ApiOptions = {}
-  ): Promise<T> => {
-    return await request<T>('PUT', endpoint, body, authenticate, options)
-  }
+  ) => request<T>('PUT', endpoint, body, authenticate, options)
 
-  const patch = async <T = any>(
+  const patch = <T>(
     endpoint: string,
     body?: any,
-    authenticate: boolean = false,
+    authenticate = false,
     options: ApiOptions = {}
-  ): Promise<T> => {
-    return await request<T>('PATCH', endpoint, body, authenticate, options)
-  }
+  ) => request<T>('PATCH', endpoint, body, authenticate, options)
 
-  const del = async <T = any>(
+  const del = <T>(
     endpoint: string,
-    authenticate: boolean = false,
+    authenticate = false,
     options: ApiOptions = {}
-  ): Promise<T> => {
-    return await request<T>('DELETE', endpoint, undefined, authenticate, options)
-  }
+  ) => request<T>('DELETE', endpoint, undefined, authenticate, options)
 
-  const upload = async <T = any>(
+  const upload = <T>(
     endpoint: string,
     formData: FormData,
-    onProgress?: (progress: number) => void,
-    authenticate: boolean = false,
+    authenticate = false,
     options: ApiOptions = {}
-  ): Promise<T> => {
-    return await post<T>(endpoint, formData, authenticate, {
-      ...options,
-      onUploadProgress: onProgress
-    })
-  }
+  ) => post<T>(endpoint, formData, authenticate, options)
 
   const download = async (
     endpoint: string,
-    filename: string = 'download',
+    filename = 'download',
     params?: Record<string, any>,
-    authenticate: boolean = false,
-    options: ApiOptions = {}
-  ): Promise<void> => {
-    const response = await get<Blob>(endpoint, params, authenticate, {
-      ...options,
+    authenticate = false
+  ) => {
+    const blob = await get<Blob>(endpoint, params, authenticate, {
       responseType: 'blob'
     })
-    
-    const url = window.URL.createObjectURL(response)
+
+    const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
     a.download = filename
-    document.body.appendChild(a)
     a.click()
-    window.URL.revokeObjectURL(url)
-    document.body.removeChild(a)
-  }
-
-  const checkAuth = (): { isAuthenticated: boolean; token?: string } => {
-    const token = userStore.token
-    return {
-      isAuthenticated: !!token,
-      token
-    }
-  }
-
-  const refreshToken = async (): Promise<boolean> => {
-    try {
-      const refreshTokenCookie = useCookie('refresh_token')
-      if (!refreshTokenCookie.value) return false
-      
-      const response = await post<{ access_token: string }>(
-        '/auth/refresh',
-        { refresh_token: refreshTokenCookie.value },
-        false,
-        {}
-      )
-      
-      if (response.access_token) {
-        userStore.setToken(response.access_token)
-        return true
-      }
-      return false
-    } catch (error) {
-      console.error('Token refresh failed:', error)
-      return false
-    }
+    URL.revokeObjectURL(url)
   }
 
   return {
@@ -301,20 +159,8 @@ const createAuthHeaders = (headers: Record<string, string> = {}): Record<string,
     del,
     upload,
     download,
-    checkAuth,
-    refreshToken,
     request,
-    withRetry,
-    loading: readonly(loading),
-    setAuthToken: (token: string) => {
-      userStore.setToken(token)
-      useCookie('auth_token').value = token
-    },
-    clearAuthToken: () => {
-      userStore.clearToken()
-      useCookie('auth_token').value = null
-      useCookie('refresh_token').value = null
-    }
+    loading: readonly(loading)
   }
 }
 

@@ -10,35 +10,46 @@ export const useEndpoints = () => {
       countries: "/utilities/countries",
       genders: "/utilities/allowed-genders",
       currencies: "/utilities/currencies",
-      our_reviews:"/utilities/our-reviews"
+      our_reviews: "/utilities/our-reviews"
     },
     user: {
-      login: '/auth/login',
-      register: '/auth/user/register',
+      getNotifications: '',
+      getNotificationsCount: '',
       profile: '/user/profile',
       searchSuggestions: '/user/search/suggestions',
-      searhHistory: (id: string) => `/user/${id}/search-history`,
+      searchHistory: (id: string) => `/user/${id}/search-history`,
       getById: (id: string) => `/user/${id}`,
       updateProfile: (id: string) => `/user/${id}/profile`,
       uploadAvatar: (id: string) => `/user/${id}/avatar`,
-      changePassword: (id: string) => `/user/${id}/change-password`,
       getFavorites: (id: string) => `/user/${id}/favorites`,
       addFavorite: (id: string) => `/user/${id}/favorites`,
       removeFavorite: (id: string, propertyId: string) =>
         `/user/${id}/favorites/${propertyId}`,
       listings: (id: string) => `/user/${id}/listings`,
+      swapRequests: '',
+      messages: '',
+      getSavedItems: '',
+      getUserMeta: (id: String) => `user/${id}/`
+
     },
 
     auth: {
+      login: '/auth/login',
+      register: '/auth/user/register',
       googleLogin: `${apiBase}/api/v1/auth/google_login`,
       oneTapGoogleLogin: `/auth/onetap-google-login`,
       facebookLogin: `${apiBase}/api/v1/auth/facebook_login`,
       sendVerificationCode: '/auth/verification/send-code',
       verifyCode: '/auth/verification/verify-code',
+      forgotPassword: (id: string) => `/user/${id}/forgot-password`,
+      changePassword: (id: string) => `/user/${id}/change-password`,
       renewToken: (id: string) => `/auth/${id}/new-token`,
       requestPasswordReset: '/auth/password/request-reset',
       resetPassword: '/auth/password/reset',
-      changePassword: '/auth/password/change',
+      // changePassword: '/auth/password/change',
+      isEmailExists: '',
+      verifyEmail: '',
+      verifyPhone: ''
     },
 
     rental: {

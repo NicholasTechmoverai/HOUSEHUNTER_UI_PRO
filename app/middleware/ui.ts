@@ -1,4 +1,4 @@
-import { useStateStore } from "~/store/state"
+import { useStateStore } from "~/stores/state"
 
 export default defineNuxtRouteMiddleware((to) => {
   const state = useStateStore()

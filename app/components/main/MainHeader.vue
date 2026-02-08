@@ -2,7 +2,7 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 import AppLogo from '../general/AppLogo.vue'
 import LoggerIcon from './LoggerIcon.vue'
-import { useStateStore } from '~/store/state'
+import { useStateStore } from '~/stores/state'
 
 const route = useRoute()
 const screen = useScreenSize()

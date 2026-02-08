@@ -1,5 +1,5 @@
 // plugins/ui-route.client.ts
-import { useStateStore } from '~/store/state'
+import { useStateStore } from '~/stores/state'
 import { watch } from 'vue'
 import { useRoute, useRouter } from '#imports'
 

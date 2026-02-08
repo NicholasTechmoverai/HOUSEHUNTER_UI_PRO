@@ -1,207 +1,91 @@
 <template>
-  <section class="min-h-screen p-6 max-w-[1400px] mx-auto">
+  <section class="min-h-screen p-4 md:p-6 max-w-[1400px] mx-auto">
     <NavigationBreadCrumb />
 
-    <div class="">
-      <!-- Header -->
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-10">
+    <div>
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
         <div>
-          <div class="flex items-center gap-3 mb-2">
+          <div class="flex items-center gap-3 mb-3">
             <UIcon name="i-lucide-layout-dashboard" class="w-8 h-8 text-primary-600 dark:text-primary-400" />
-            <h1 class="font-bold text-3xl sm:text-4xl text-gray-900 dark:text-white">My Dashboard</h1>
+            <h1 class="font-bold text-3xl sm:text-4xl text-gray-900 dark:text-white">
+              Dashboard
+            </h1>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 text-base sm:text-lg mt-2">Manage your saved properties, applications, and housing swaps</p>
+          <p class="text-gray-600 dark:text-gray-400 text-base sm:text-lg">
+            Manage your saved properties, applications, and housing swaps
+          </p>
         </div>
 
-        <div class="flex items-center gap-3 mt-6 lg:mt-0">
-          <UButton 
-            icon="i-lucide-bell" 
-            color="gray" 
-            variant="ghost" 
-            class="hover:bg-gray-200 dark:hover:bg-gray-800"
-            aria-label="Notifications"
-          />
-          <UButton 
-            icon="i-lucide-settings" 
-            color="gray" 
-            variant="ghost" 
-            class="hover:bg-gray-200 dark:hover:bg-gray-800"
-            aria-label="Settings"
-          />
+        <div class="flex items-center gap-2 mt-6 lg:mt-0">
+          <UButton icon="i-lucide-bell" color="gray" variant="ghost"
+            class="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full p-2" aria-label="Notifications"
+            :ui="{ rounded: 'rounded-full' }" />
+          <UButton icon="i-lucide-settings" color="gray" variant="ghost"
+            class="hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full p-2" aria-label="Settings"
+            :ui="{ rounded: 'rounded-full' }" />
         </div>
       </div>
 
-    
-
-      <!-- Main Content -->
-      <div class="flex flex-col lg:flex-row gap-6">
-        <!-- Sidebar Navigation -->
-        <div class="lg:w-64">
-          <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-            <nav class="p-2">
-              <UButton 
-                to="/dashboard/saved" 
-                color="primary" 
-                variant="solid" 
-                label="Saved Properties (3)" 
-                block 
-                class="justify-start mb-2"
-                icon="i-lucide-bookmark"
-              />
-              <UButton 
-                to="/dashboard/applications" 
-                color="gray" 
-                variant="outline" 
-                label="Applications (4)" 
-                block 
-                class="justify-start mb-2"
-                icon="i-lucide-file-text"
-              />
-              <UButton 
-                to="/dashboard/swaps" 
-                color="gray" 
-                variant="outline" 
-                label="My Housing Swaps (1)" 
-                block 
-                class="justify-start mb-2"
-                icon="i-lucide-repeat"
-              />
-              <USeparator />
-              <UButton 
-                to="/dashboard/messages" 
-                color="gray" 
-                variant="outline" 
-                label="Messages (5)" 
-                block 
-                class="justify-start mb-2"
-                icon="i-lucide-message-square"
-                badge="2"
-              />
-              <UButton 
-                to="/dashboard/profile" 
-                color="gray" 
-                variant="outline" 
-                label="Profile" 
-                block 
-                class="justify-start"
-                icon="i-lucide-user"
-              />
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="md:w-1/4 space-y-6">
+          <div class="rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+            <nav class="p-3 space-y-1">
+              <UButton to="/dashboard/?tab=saved" :color="activeTab === 'saved' ? 'primary' : 'gray'"
+                :variant="activeTab === 'saved' ? 'solid' : 'ghost'" label="Saved Properties (3)" block
+                class="justify-start transition-all duration-200" icon="i-lucide-bookmark"
+                :ui="{ rounded: 'rounded-lg' }" />
+              <UButton to="/dashboard/?tab=applications" :color="activeTab === 'applications' ? 'primary' : 'gray'"
+                :variant="activeTab === 'applications' ? 'solid' : 'ghost'" label="Applications (4)" block
+                class="justify-start transition-all duration-200" icon="i-lucide-file-text"
+                :ui="{ rounded: 'rounded-lg' }" />
+              <UButton to="/dashboard/?tab=swaps" :color="activeTab === 'swaps' ? 'primary' : 'gray'"
+                :variant="activeTab === 'swaps' ? 'solid' : 'ghost'" label="Housing Swaps (1)" block
+                class="justify-start transition-all duration-200" icon="i-lucide-repeat"
+                :ui="{ rounded: 'rounded-lg' }" />
+              <UDivider class="my-2" />
+              <UButton to="/dashboard/?tab=messages" :color="activeTab === 'messages' ? 'primary' : 'gray'"
+                :variant="activeTab === 'messages' ? 'solid' : 'ghost'" label="Messages (5)" block
+                class="justify-start transition-all duration-200" icon="i-lucide-message-square"
+                :ui="{ rounded: 'rounded-lg' }">
+                <template #trailing>
+                  <span class="ml-auto bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
+                    2
+                  </span>
+                </template>
+              </UButton>
+              <UButton to="/dashboard/?tab=profile" :color="activeTab === 'profile' ? 'primary' : 'gray'"
+                :variant="activeTab === 'profile' ? 'solid' : 'ghost'" label="Profile" block
+                class="justify-start transition-all duration-200" icon="i-lucide-user"
+                :ui="{ rounded: 'rounded-lg' }" />
             </nav>
           </div>
 
-          <!-- Quick Actions -->
-          <div class="mt-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-4">
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Quick Actions</h3>
+          <div class="rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-5">
+            <h3 class="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <UIcon name="i-lucide-zap" class="w-4 h-4 text-primary-600 dark:text-primary-400" />
+              Quick Actions
+            </h3>
             <div class="space-y-2">
-              <UButton 
-                icon="i-lucide-plus" 
-                label="Add Property" 
-                color="primary" 
-                variant="ghost" 
-                block 
-                class="justify-start"
-              />
-              <UButton 
-                icon="i-lucide-search" 
-                label="Browse Listings" 
-                color="gray" 
-                variant="ghost" 
-                block 
-                class="justify-start"
-              />
-              <UButton 
-                icon="i-lucide-share-2" 
-                label="Share Profile" 
-                color="gray" 
-                variant="ghost" 
-                block 
-                class="justify-start"
-              />
+              <UButton icon="i-lucide-plus" label="Add Property" color="primary" variant="ghost" block
+                class="justify-start hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                :ui="{ rounded: 'rounded-lg' }" />
+              <UButton icon="i-lucide-search" label="Browse Listings" color="gray" variant="ghost" block
+                class="justify-start" :ui="{ rounded: 'rounded-lg' }" />
+              <UButton icon="i-lucide-share-2" label="Share Profile" color="gray" variant="ghost" block
+                class="justify-start" :ui="{ rounded: 'rounded-lg' }" />
             </div>
           </div>
         </div>
 
-        <!-- Main Content Area -->
         <div class="flex-1">
-          <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
-            <!-- Content Header -->
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Recently Saved Properties</h2>
-              <UButton 
-                icon="i-lucide-arrow-right" 
-                label="View All" 
-                color="gray" 
-                variant="ghost" 
-                size="sm"
-              />
-            </div>
-
-            <!-- Saved Properties Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div v-for="i in 3" :key="i" class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <div class="h-40 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900/20 dark:to-blue-800/10"></div>
-                <div class="p-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">Modern Apartment</span>
-                    <UIcon name="i-lucide-bookmark-check" class="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                  </div>
-                  <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Nairobi • 2 Bedroom</p>
-                  <div class="flex items-center justify-between">
-                    <span class="font-bold text-gray-900 dark:text-white">KSh 25,000/mo</span>
-                    <UButton 
-                      icon="i-lucide-eye" 
-                      color="gray" 
-                      variant="ghost" 
-                      size="sm"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Empty State (if no properties) -->
-            <div v-if="false" class="text-center py-12">
-              <UIcon name="i-lucide-home" class="w-16 h-16 text-gray-300 dark:text-gray-700 mx-auto" />
-              <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">No saved properties yet</h3>
-              <p class="mt-2 text-gray-600 dark:text-gray-400 max-w-sm mx-auto">
-                Start exploring housing options and save properties you're interested in.
-              </p>
-              <UButton 
-                label="Browse Properties" 
-                color="primary" 
-                variant="solid" 
-                class="mt-4"
-                icon="i-lucide-search"
-              />
-            </div>
-          </div>
-
-          <!-- Applications Section -->
-          <div class="mt-6 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-6">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Recent Applications</h2>
-              <UButton 
-                icon="i-lucide-plus" 
-                label="New Application" 
-                color="primary" 
-                variant="solid" 
-                size="sm"
-              />
-            </div>
-
-            <div class="space-y-3">
-              <div v-for="i in 2" :key="i" class="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-800 rounded-lg">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                    <UIcon name="i-lucide-file-text" class="w-5 h-5 text-green-600 dark:text-green-400" />
-                  </div>
-                  <div>
-                    <p class="font-medium text-gray-900 dark:text-white">Studio Apartment Application</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Submitted 2 days ago</p>
-                  </div>
-                </div>
-                <UBadge color="green" variant="subtle">Pending</UBadge>
-              </div>
+          <div class="rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+            <div class="p-6">
+              <SavedPP v-if="activeTab === 'saved'" />
+              <UserProfile v-else-if="activeTab === 'profile'" />
+              <MyListings v-else-if="activeTab === 'listings'" />
+              <MyApplications v-else-if="activeTab === 'applications'" />
+              <MySwaps v-else-if="activeTab === 'swaps'" />
+              <UBanner v-else title="Tab not found" color="error" />
             </div>
           </div>
         </div>
@@ -210,36 +94,39 @@
   </section>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
 
-const activeTab = ref('saved')
-const stats = {
-  saved: 3,
-  applications: 4,
-  swaps: 1,
-  messages: 5
-}
+const route = useRoute()
+const activeTab = ref<'saved' | 'profile' | 'listings' | 'applications' | 'swaps' | 'messages'>('saved')
+
+watch(
+  () => route.query.tab,
+  (val) => {
+    if (typeof val === 'string') activeTab.value = val as typeof activeTab.value
+  },
+  { immediate: true }
+)
 </script>
 
 <style>
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
+  background: #c1c1c1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #a1a1a1;
 }
 
 .dark ::-webkit-scrollbar-track {

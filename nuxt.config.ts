@@ -9,7 +9,7 @@ const THEME_COLOR = '#FF5733'
 const BACKGROUND_COLOR = '#FFFFFF'
 const FAVICON = '/f_logo.png'
 
-// SEO Keywords (use relevant keywords for your platform)
+// SEO Keywords 
 const KEYWORDS = [
   'house hunting',
   'property rental',
@@ -33,18 +33,26 @@ export default defineNuxtConfig({
     }
   },
 
-  // 🔍 SEO & Indexing Modules (Nuxt 4 Compatible)
+  // SEO & Indexing Modules (Nuxt 4 Compatible)
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui',
     '@vueuse/nuxt',
     '@pinia/nuxt',
-    '@nuxtjs/robots', // Updated module
-    '@nuxtjs/sitemap', // Updated module
-    'nuxt-schema-org', // Keep this one, it's compatible
+    'pinia-plugin-persistedstate/nuxt',
+    '@nuxtjs/robots', 
+    '@nuxtjs/sitemap', 
+    'nuxt-schema-org', 
   ],
+  piniaPluginPersistedstate: {
+    storage: 'cookies',
+    cookieOptions: {
+      sameSite: 'lax',
+    },
+    debug: true,
+  },
 
-  // 📄 Robots.txt Configuration
+  // Robots.txt Configuration
   robots: {
     enabled: true,
     allow: ['/'],
@@ -52,7 +60,7 @@ export default defineNuxtConfig({
     sitemap: `${SITE_URL}/sitemap.xml`
   },
 
-  // 🗺️ Sitemap Configuration
+  // Sitemap Configuration
   sitemap: {
     enabled: true,
     siteUrl: SITE_URL,
@@ -67,7 +75,7 @@ export default defineNuxtConfig({
     ]
   },
 
-  // 🏗️ Structured Data (Schema.org)
+  // Structured Data (Schema.org)
   schemaOrg: {
     enabled: true,
     canonicalHost: SITE_URL,
@@ -143,7 +151,9 @@ export default defineNuxtConfig({
       { path: '~/components/inbox', pathPrefix: false },
       { path: '~/components/home', pathPrefix: false },
       { path: '~/components/settings', pathPrefix: false },
-            { path: '~/components/listing', pathPrefix: false }
+      { path: '~/components/listing', pathPrefix: false },
+      { path: '~/components/map', pathPrefix: false },
+      { path: '~/components/dashboard', pathPrefix: false }
 
     ]
   },
@@ -173,14 +183,14 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: DEFAULT_DESCRIPTION },
         { name: 'keywords', content: KEYWORDS },
-        
+
         // Theme & Mobile
         { name: 'theme-color', content: THEME_COLOR },
         { name: 'color-scheme', content: 'light dark' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-title', content: SITE_NAME },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
-        
+
         // Open Graph (Facebook, LinkedIn, etc.)
         { property: 'og:type', content: 'website' },
         { property: 'og:url', content: SITE_URL },
@@ -191,7 +201,7 @@ export default defineNuxtConfig({
         { property: 'og:image:height', content: '630' },
         { property: 'og:locale', content: 'en_US' },
         { property: 'og:site_name', content: SITE_NAME },
-        
+
         // Twitter Card
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:site', content: '@househunter' },
@@ -199,7 +209,7 @@ export default defineNuxtConfig({
         { name: 'twitter:title', content: SITE_NAME },
         { name: 'twitter:description', content: DEFAULT_DESCRIPTION },
         { name: 'twitter:image', content: `${SITE_URL}/twitter-card.jpg` },
-        
+
         // Additional Meta
         { name: 'robots', content: 'index, follow, max-image-preview:large' },
         { name: 'format-detection', content: 'telephone=no' },
@@ -211,7 +221,7 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: FAVICON },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/manifest.json' },
-        
+
         // Preconnect for performance
         { rel: 'preconnect', href: API_URL },
         { rel: 'preconnect', href: 'https://accounts.google.com' }

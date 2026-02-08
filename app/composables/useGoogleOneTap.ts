@@ -1,3 +1,5 @@
+import { useAuthStore } from "~/stores/auth"
+
 export const useGoogleOneTap = () => {
     if (document.getElementById('google-gsi')) return
 
@@ -32,7 +34,7 @@ const handleCredential = async (response: { credential: string }) => {
         const result = await post(endpoints.auth.oneTapGoogleLogin, { token: response.credential })
 
         if (result.success) {
-            const userStore = useUserStore()
+            const userStore = useAuthStore()
             userStore.setUser(result.data.user, result.data.access_token)
         } else {
             console.error('Login failed:', result.message)

@@ -1,12 +1,12 @@
 <template>
-  <div v-if="userStore.user" class="cursor-pointer ">
+  <div v-if="authStore.user" class="cursor-pointer ">
     <UPopover arrow>
-      <UAvatar :src="userStore.user.profile_picture" :alt="userStore.user.username || 'User avatar'" />
+      <UAvatar :src="authStore.user.profile_picture" :alt="authStore.user.display_name || 'User avatar'" />
 
       <template #content>
         <div class="flex flex-col gap-2 p-2 min-w-[200px]">
           <UButton icon="i-lucide-user" variant="outline" @click="$router.push('/account')"
-            :label="userStore.user?.display_name" />
+            :label="authStore.user?.display_name" />
           <UButton icon="i-lucide-log-out" color="error" variant="outline" @click="logout" label="Logout" />
         </div>
       </template>
@@ -27,19 +27,20 @@
 </template>
 
 <script setup lang="ts">
-import { useUSerStore } from '~/store/user'
+import { useAuthStore } from '~/stores/auth'
 
 
-const userStore = useUSerStore()
+
+const authStore = useAuthStore()
 // const authStore = useAuthStore()
 
 const login = async () => {
-  // authStore.setLastAttemptedRouteToCurrent()
-  // await authStore.handleGoogleLogin()
+  authStore.setLastAttemptedRouteToCurrent()
+  await authStore.handleGoogleLogin()
 }
 
 const logout = () => {
-  const res = userStore.logout()
+  const res = authStore.logout()
   if (res) {
     useToast().add({
       title: "Signed out!",

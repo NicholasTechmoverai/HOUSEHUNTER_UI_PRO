@@ -11,8 +11,5 @@ const { isDesktop } = useScreenSize()
     <UMain :class="{'mt-20':!isDesktop}">
       <NuxtPage />
     </UMain>
-
-    <USeparator icon="i-simple-icons-nuxtdotjs" />
-
   </UApp>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="`/listing/${rental?.category}/${rental?.slug}`" class="border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-900">
+  <NuxtLink :to="`/listings/${rental?.category}/${rental?.slug}`" class="border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-900">
     <!-- Image -->
     <div class="relative h-68 overflow-hidden">
       <img 

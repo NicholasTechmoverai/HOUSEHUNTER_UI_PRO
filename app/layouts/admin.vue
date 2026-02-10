@@ -30,7 +30,7 @@ const links = [[{
   }
 }, {
   label: 'Settings',
-  to: '/admi/settings',
+  to: '/admin/settings',
   icon: 'i-lucide-settings',
   defaultOpen: true,
   type: 'trigger',

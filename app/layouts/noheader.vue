@@ -27,7 +27,7 @@ const goBack = () => {
         </UMain>
 
         <footer class="mt-auto border-t border-gray-200 dark:border-gray-800">
-            <USeparator icon="i-lucide-code" />
+    <USeparator icon="i-lucide-house-heart" />
 
             <div class="flex flex-col sm:flex-row items-center justify-between
                gap-3 px-6 py-4 text-sm">

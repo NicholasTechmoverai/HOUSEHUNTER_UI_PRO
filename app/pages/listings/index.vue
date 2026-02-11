@@ -3,7 +3,8 @@ import type { FilterState } from '~/types/listings'
 
 const route = useRoute()
 const router = useRouter()
-
+const endpoints = useEndpoints()
+const { get } = useApi()
 const showFilter = ref(true)
 const filters = ref<FilterState | null>(null)
 const searchQuery = ref('')
@@ -35,6 +36,25 @@ const applyFilters = (value: FilterState) => {
   filters.value = { ...value }
 }
 
+const category = computed(() => route.params.category as string)
+
+useSeoMeta({
+  title: `Modern rentals`,
+  description: 'Browse available rentals and find your next home.',
+})
+
+const {
+  data: rentals,
+  pending: allLoading,
+  error: allError,
+  refresh: refreshAll,
+} = await useAsyncData(
+  () => `all-rentals-${category.value}`,
+  () => get(endpoints.rental.list, { category: category.value }),
+  {
+    watch: [category],
+  }
+)
 </script>
 
 <template>
@@ -53,29 +73,13 @@ const applyFilters = (value: FilterState) => {
       </div>
 
       <div class="flex items-center gap-3">
-        <UButton
-          icon="i-lucide-filter"
-          size="md"
-          :label="showFilter ? 'Hide Filters' : 'Show Filters'"
-          :variant="showFilter ? 'solid' : 'outline'"
-          :color="showFilter ? 'primary' : 'neutral'"
-          @click="toggleFilter"
-        />
+        <UButton icon="i-lucide-filter" size="md" :label="showFilter ? 'Hide Filters' : 'Show Filters'"
+          :variant="showFilter ? 'solid' : 'outline'" :color="showFilter ? 'primary' : 'neutral'"
+          @click="toggleFilter" />
 
         <UFieldGroup>
-          <UButton
-            color="neutral"
-            size="md"
-            variant="subtle"
-            icon="i-lucide-grid"
-          />
-          <UButton
-            to="/map"
-            color="neutral"
-            size="md"
-            variant="outline"
-            icon="i-lucide-map"
-          />
+          <UButton color="neutral" size="md" variant="subtle" icon="i-lucide-grid" />
+          <UButton to="/map" color="neutral" size="md" variant="outline" icon="i-lucide-map" />
         </UFieldGroup>
       </div>
     </div>
@@ -93,16 +97,11 @@ const applyFilters = (value: FilterState) => {
         </aside>
       </Transition>
 
-      <main
-        :class="[
-          'transition-all duration-300',
-          showFilter ? 'lg:w-3/4' : 'w-full'
-        ]"
-      >
-        <ListProperties
-          :filters="filters"
-          :search_query="searchQuery"
-        />
+      <main :class="[
+        'transition-all duration-300',
+        showFilter ? 'lg:w-3/4' : 'w-full'
+      ]">
+        <ListProperties :filters="filters" :search_query="searchQuery" />
       </main>
     </div>
   </section>

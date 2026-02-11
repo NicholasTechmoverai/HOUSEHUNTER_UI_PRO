@@ -99,6 +99,8 @@ export const useEndpoints = () => {
 
       userStats: (userId: string) => `/rental/user/${userId}/stats`,
       categoryStats: '/rental/stats/categories',
+      getReviews: (id: string) => `/rental/${id}/reviews`,
+      addReviews: (id: string,userId:string) => `/rental/${id}/reviews/${userId}`,
 
       verifyRental: (rentalId: string) => `/rental/${rentalId}/verify`,
       unverifyRental: (rentalId: string) => `/rental/${rentalId}/unverify`,
@@ -145,5 +147,10 @@ export const useEndpoints = () => {
       getListings: '/listings',
       getListingDetails: (id: string) => `/listings/${id}`,
     },
+
+    asAdmin:{
+      listUsers:'/as-admin/all-users',
+      listRentals:'/as-admin/all-rentals'
+    }
   }
 }

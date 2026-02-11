@@ -22,12 +22,68 @@ const links = [[{
     open.value = false
   }
 }, {
-  label: 'Customers',
+  label: 'Users',
   icon: 'i-lucide-users',
-  to: '/admin/customers',
+  to: '/admin/users',
   onSelect: () => {
     open.value = false
-  }
+  },
+  children: [{
+    label: 'Normal ',
+    to: '/admin/users/normal',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'Managers',
+    to: '/admin/users/manageers',
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'admins',
+    to: '/admin/settings/notifications',
+    onSelect: () => {
+      open.value = false
+    }
+  }]
+},
+{
+  label: 'Properties',
+  icon: 'i-lucide-users',
+  to: '/admin/properties',
+  onSelect: () => {
+    open.value = false
+  },
+  children: [{
+    label: 'Rentals ',
+    to: '/admin/properties/rentals',
+    exact: true,
+    onSelect: () => {
+      open.value = false
+    }
+  }, {
+    label: 'swaps',
+    to: '/admin/users/manageers',
+    onSelect: () => {
+      open.value = false
+    }
+  },
+  {
+    label: 'All reported',
+    to: '/admin/property/?tab=reported',
+    onSelect: () => {
+      open.value = false
+    },
+    
+  },{
+    label: 'All deleted',
+    to: '/admin/property/?tab=deleted',
+    onSelect: () => {
+      open.value = false
+    },
+  }]
 }, {
   label: 'Settings',
   to: '/admin/settings',
@@ -63,14 +119,17 @@ const links = [[{
 }], [{
   label: 'Feedback',
   icon: 'i-lucide-message-circle',
-  to: 'https://github.com/nuxt-ui-templates/dashboard',
+  to: '/feedback',
   target: '_blank'
 }, {
   label: 'Help & Support',
   icon: 'i-lucide-info',
-  to: 'https://github.com/nuxt-ui-templates/dashboard',
+  to: 'help-en-support',
   target: '_blank'
 }]] satisfies NavigationMenuItem[][]
+
+
+
 
 const groups = computed(() => [{
   id: 'links',
@@ -116,14 +175,8 @@ onMounted(async () => {
 
 <template>
   <UDashboardGroup unit="rem">
-    <UDashboardSidebar
-      id="default"
-      v-model:open="open"
-      collapsible
-      resizable
-      class="bg-elevated/25"
-      :ui="{ footer: 'lg:border-t lg:border-default' }"
-    >
+    <UDashboardSidebar id="default" v-model:open="open" collapsible resizable class="bg-elevated/25"
+      :ui="{ footer: 'lg:border-t lg:border-default' }">
       <template #header="{ collapsed }">
         <TeamsMenu :collapsed="collapsed" />
       </template>
@@ -131,21 +184,9 @@ onMounted(async () => {
       <template #default="{ collapsed }">
         <UDashboardSearchButton :collapsed="collapsed" class="bg-transparent ring-default" />
 
-        <UNavigationMenu
-          :collapsed="collapsed"
-          :items="links[0]"
-          orientation="vertical"
-          tooltip
-          popover
-        />
+        <UNavigationMenu :collapsed="collapsed" :items="links[0]" orientation="vertical" tooltip popover />
 
-        <UNavigationMenu
-          :collapsed="collapsed"
-          :items="links[1]"
-          orientation="vertical"
-          tooltip
-          class="mt-auto"
-        />
+        <UNavigationMenu :collapsed="collapsed" :items="links[1]" orientation="vertical" tooltip class="mt-auto" />
       </template>
 
       <template #footer="{ collapsed }">

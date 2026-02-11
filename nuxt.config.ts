@@ -146,7 +146,7 @@ export default defineNuxtConfig({
     dirs: [
       { path: '~/components/main', pathPrefix: false },
       { path: '~/components/general', pathPrefix: false },
-      { path: '~/components/customers', pathPrefix: false },
+      { path: '~/components/users', pathPrefix: false },
       { path: '~/components/admin', pathPrefix: false },
       { path: '~/components/inbox', pathPrefix: false },
       { path: '~/components/home', pathPrefix: false },

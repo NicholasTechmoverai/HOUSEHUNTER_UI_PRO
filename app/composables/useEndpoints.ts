@@ -8,6 +8,7 @@ export const useEndpoints = () => {
     utilities: {
       propertyCategories: '/utilities/property-categories',
       countries: "/utilities/countries",
+      counties: (country_code:string) => `/utilities/counties/${country_code}`,
       genders: "/utilities/allowed-genders",
       currencies: "/utilities/currencies",
       our_reviews: "/utilities/our-reviews"

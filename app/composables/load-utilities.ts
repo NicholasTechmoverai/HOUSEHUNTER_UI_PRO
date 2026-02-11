@@ -39,6 +39,26 @@ const endpoint = useEndpoints()
   }
 }
 
+
+export const load_counties_by_country = async (_countryCode:string) => {
+
+const { get } = useApi()
+const endpoint = useEndpoints()
+
+  try {
+    const res = await get(endpoint.utilities.counties(_countryCode))
+    if (res.success) {
+      return res
+    } else {
+      console.warn("Failed to load countries", res)
+      return res
+    }
+  } catch (err) {
+    console.error("Error loading countries:", err)
+    return { success: false, message: err.message, data: [] }
+  }
+}
+
 // ---------------- Load Currencies ----------------
 export const load_currencies = async () => {
 
@@ -77,4 +97,23 @@ const endpoint = useEndpoints()
     return { success: false, message: err.message, data: [] }
   }
 
+}
+
+export const load_property_categories = async () => {
+
+const { get } = useApi()
+const endpoint = useEndpoints()
+
+  try {
+    const res = await get(endpoint.utilities.propertyCategories)
+    if (res.success) {
+      return res
+    } else {
+      console.warn("Failed to load property types", res)
+      return res
+    }
+  } catch (err) {
+    console.error("Error loading property types:", err)
+    return { success: false, message: err.message, data: [] }
+  }
 }
